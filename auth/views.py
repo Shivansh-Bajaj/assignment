@@ -47,12 +47,10 @@ def signup(request):
 @api_view(['GET','POST', 'PATCH', 'DELETE'])
 @permission_classes((IsAuthenticated,))
 def upload_img(request):
-    print(request.method)
     if hasattr(request, 'FILES') and request.FILES.get('file') != None and not check_extension(str(request.FILES.get('file'))):
         return Response({'success': 'fail', 'msg':'only PNG or JPG or GIF format allowed'})
     if request.method == 'POST':
         file = request.FILES['file']
-        print(request.user)
         path = str(request.user)+'/'+str(file)
         file_obj = default_storage.save(path, ContentFile(file.read()))
         return Response({'status': 'success'})
@@ -60,7 +58,6 @@ def upload_img(request):
         path = request.GET.get('file')
         if path == 'all' or path == None:
             urls = []
-            print(default_storage.listdir(str(request.user)))
             for i in default_storage.listdir(str(request.user))[1]:
                 urls.append('/media/'+str(request.user) + '/' + i)
             return Response({'status': 'success',' files': urls})
@@ -70,16 +67,13 @@ def upload_img(request):
         if not request.FILES.get('file'):
             return Response({'status': 'fail', 'msg': 'please provide new image in file attribute'})
         path = str(request.user)+'/'+str(request.data.get('filename') if request.data.get('filename')!= None else request.FILES.get('file'))
-        print(path)
         if default_storage.exists(path):
-            print(path)
             default_storage.delete(path)
         default_storage.save(path, ContentFile(request.FILES.get('file').read()))
         return Response({'status': 'success'})
     elif request.method == 'DELETE':
         path = str(request.user) +'/'+ str(request.data.get('file'))
         try:
-            print(path)
             default_storage.delete(path)
             return Response({'status': 'success'})
         except Exception:

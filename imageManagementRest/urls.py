@@ -27,7 +27,7 @@ def protected_serve(request, path, document_root=None, show_indexes=False):
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^auth/', include('auth.urls', namespace="auth")),
+    url(r'^api/', include('auth.urls', namespace="auth")),
     url(r'^%s(?P<path>.*)$' % settings.MEDIA_URL[1:], protected_serve, {'document_root': settings.MEDIA_ROOT}),    
 ]
 

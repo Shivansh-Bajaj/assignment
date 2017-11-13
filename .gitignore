@@ -1,3 +1,6 @@
 *.swp
-DS_store
+*.swo
+*.DS_Store
 *.pyc
+db.*
+media/*
